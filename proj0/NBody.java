@@ -26,7 +26,7 @@ public class NBody {
         return planets;
     }
 
-    public static final double w = 2.1e-9;
+    private static final double w = 2.1e-9;
 
     public static void main(String[] args) {
         double T  = Double.parseDouble(args[0]);
@@ -35,7 +35,6 @@ public class NBody {
 
         double radius = readRadius(filename);
         int size = (int) Math.round(w * radius);
-        System.out.println("[info] Get canvas size: " + size);
 
         StdDraw.setCanvasSize(size, size);
         StdDraw.setScale(-radius, radius);
@@ -64,13 +63,12 @@ public class NBody {
             StdDraw.pause(10);
         }
 
-
         StdOut.printf("%d\n", planets.length);
         StdOut.printf("%.2e\n", radius);
         for (int i = 0; i < planets.length; i++) {
-            StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
-                    planets[i].xxPos, planets[i].yyPos, planets[i].xxVel,
-                    planets[i].yyVel, planets[i].mass, planets[i].imgFileName);   
+        StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+                  planets[i].xxPos, planets[i].yyPos, planets[i].xxVel,
+                  planets[i].yyVel, planets[i].mass, planets[i].imgFileName);   
         }
     }
 }

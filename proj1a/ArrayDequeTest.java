@@ -58,7 +58,7 @@ public class ArrayDequeTest {
             L.addFirst(i);
         }
 
-        for (int i = 33; i>= 7; i--) {
+        for (int i = 33; i >= 7; i--) {
             L.removeLast();
         }
     }

@@ -83,7 +83,7 @@ public class ArrayDeque<T> {
         if (front == back) {
             return null;
         }
-        back = (back - 1) % arr.length;
+        back = (back - 1 + arr.length) % arr.length;
         T res = arr[back];
         shrink();
         return res;

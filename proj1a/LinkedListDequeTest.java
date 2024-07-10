@@ -82,9 +82,13 @@ public class LinkedListDequeTest {
 
 	public static void myViewer() {
 		LinkedListDeque<String> L = new LinkedListDeque<>();
+		L.addFirst("May");
+		L.removeLast();
+		L.addLast("Cry");
+		L.removeFirst();
 		L.addFirst("am");
 		L.addFirst("approaching");
-		L.addLast("evil");
+		L.addLast("Devil");
 		L.removeLast();
 		L.addLast("the");
 		L.removeFirst();
@@ -97,10 +101,32 @@ public class LinkedListDequeTest {
 		System.out.println(L.getRecursive(3));
 	}
 
+	public static void getTest() {
+		System.out.println("Start getTest");
+		LinkedListDeque<Integer> L = new LinkedListDeque<>();
+		for (int i = 0; i < 10000; i++) {
+			L.addLast(i);
+		}
+
+		boolean passed = true;
+		for (int i = 0; i < 10000; i++) {
+			if (L.get(i) != i) {
+				System.out.println("get(" + i + ") failed");
+				passed = false;
+			}
+			if (L.getRecursive(i) != i) {
+				System.out.println("getRecursive(" + i + ") failed");
+				passed = false;
+			}
+		}
+		printTestStatus(passed);
+	}
+
 	public static void main(String[] args) {
 		System.out.println("Running tests.\n");
 		addIsEmptySizeTest();
 		addRemoveTest();
+		getTest();
 		myViewer();
 	}
 } 

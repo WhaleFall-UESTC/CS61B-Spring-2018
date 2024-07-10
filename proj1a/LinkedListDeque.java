@@ -3,11 +3,11 @@ public class LinkedListDeque<T> {
     private Node sentinel;
 
     private class Node {
-        public T item;
-        public Node front;
-        public Node back;
+        private T item;
+        private Node front;
+        private Node back;
 
-        public Node(T item, Node front, Node back) {
+        Node(T item, Node front, Node back) {
             this.item = item;
             this.front = front;
             this.back = back;
@@ -25,8 +25,9 @@ public class LinkedListDeque<T> {
         Node curFirst = sentinel.front;
         sentinel.front = new Node(item, sentinel, curFirst);
         curFirst.front = sentinel.front;
-        if (size == 0)
+        if (size == 0) {
             curFirst.back = sentinel.front;
+        }
         size++;
     }
 
@@ -34,8 +35,9 @@ public class LinkedListDeque<T> {
         Node curLast = sentinel.back;
         sentinel.back = new Node(item, curLast, sentinel);
         curLast.back = sentinel.back;
-        if (size == 0)
+        if (size == 0) {
             curLast.front = sentinel.back;
+        }
         size++;
     }
 
@@ -56,7 +58,9 @@ public class LinkedListDeque<T> {
     }
 
     public T removeFirst() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         // save the first item
         T res = sentinel.front.item;
         // sentinal points to the second
@@ -64,15 +68,23 @@ public class LinkedListDeque<T> {
         // the second points to sentinel
         sentinel.front.front = sentinel;
         size--;
+        if (size == 0) {
+            sentinel.back = sentinel;
+        }
         return res;
     }
 
     public T removeLast() {
-        if (size == 0) return null;
+        if (size == 0) {
+            return null;
+        }
         T res = sentinel.back.item;
         sentinel.back = sentinel.back.front;
         sentinel.back.back = sentinel;
         size--;
+        if (size == 0) {
+            sentinel.front = sentinel;
+        }
         return res;
     }
 
@@ -95,13 +107,19 @@ public class LinkedListDeque<T> {
     }
 
     private Node getNodeRecursive(int index) {
-        if (index == 0) return sentinel.front;
-        else return getNodeRecursive(index - 1).back;
+        if (index == 0) {
+            return sentinel.front;
+        } else {
+            return getNodeRecursive(index - 1).back;
+        }
     }
 
     private Node getNodeReverse(int index) {
-        if (index == size - 1) return sentinel.back;
-        else return getNodeReverse(index + 1).front;
+        if (index == size - 1) {
+            return sentinel.back;
+        } else {
+            return getNodeReverse(index + 1).front;
+        }
     }
 
     public T getRecursive(int index) {

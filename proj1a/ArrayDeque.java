@@ -1,5 +1,3 @@
-import java.lang.Math;
-
 public class ArrayDeque<T> {
     private T[] arr;
     private int front;
@@ -18,9 +16,9 @@ public class ArrayDeque<T> {
     private void expand() {
         if (front == back) {
             T[] newArr = (T[]) new Object[arr.length * 2];
-            for (int ptr = 0; ptr < arr.length; ptr++)
+            for (int ptr = 0; ptr < arr.length; ptr++) {
                 newArr[ptr] = arr[(ptr + front) % arr.length];
-
+            }
             back = arr.length;
             arr = newArr;
             front = 0;
@@ -28,14 +26,15 @@ public class ArrayDeque<T> {
     }
 
     private void shrink() {
-        if (arr.length < SMALL_ARR_THRESHOLD)
+        if (arr.length < SMALL_ARR_THRESHOLD) {
             return;
+        }
         int size = size();
         if (size < Math.floor(arr.length * USAGE_FACTOR)) {
             T[] newArr = (T[]) new Object[arr.length / 2];
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < size; i++) {
                 newArr[i] = arr[(front + i) % arr.length];
-
+            }
             arr = newArr;
             front = 0;
             back = size;
@@ -65,12 +64,15 @@ public class ArrayDeque<T> {
 
     public void printDeque() {
         int size = size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             System.out.print(arr[(front + i) % arr.length] + " ");
+        }
     }
 
     public T removeFirst() {
-        if (front == back) return null;
+        if (front == back) {
+            return null;
+        }
         T res = arr[front];
         front = (front + 1) % arr.length;
         shrink();
@@ -78,7 +80,9 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
-        if (front == back) return null;
+        if (front == back) {
+            return null;
+        }
         back = (back - 1) % arr.length;
         T res = arr[back];
         shrink();
@@ -86,6 +90,10 @@ public class ArrayDeque<T> {
     }
 
     public T get(int index) {
-       return arr[(front + index) % arr.length];
+        if (index >= 0 && index < size()) {
+            return arr[(front + index) % arr.length];
+        } else {
+            return null;
+        }
     }
 }

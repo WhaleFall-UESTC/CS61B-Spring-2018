@@ -27,7 +27,7 @@ public class Palindrome {
         int len = word.length();
         int lenHalf = len / 2;
         for (int i = 0; i < lenHalf; i++) {
-            if (false == cc.equalChars(word.charAt(i), word.charAt(len - i - 1))) {
+            if (!cc.equalChars(word.charAt(i), word.charAt(len - i - 1))) {
                 return false;
             }
         }

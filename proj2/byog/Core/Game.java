@@ -5,6 +5,8 @@ import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 import byog.lab5.HexWorld;
 
+import java.io.*;
+
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
@@ -34,6 +36,7 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
         Inst inst = instExplainer(input);
+        inst.handler();
 
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
         Generator gen = new Generator(WIDTH, HEIGHT, inst.seed);
@@ -43,6 +46,7 @@ public class Game {
         gen.allocateBlocks();
         gen.setBuildingForBlocks(finalWorldFrame);
         gen.connectBuildingsInBlocks(finalWorldFrame);
+        gen.buildWall(finalWorldFrame);
 
         return finalWorldFrame;
     }
@@ -59,7 +63,41 @@ public class Game {
             this.op = op;
         }
 
+        public void handler() {
+            try {
+                instHandler();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
+        private void instHandler() throws IOException {
+            switch (op) {
+                case QUIT: {
+                    File sav = new File("saving.txt");
+                    if (!sav.exists()) {
+                        sav.createNewFile();
+                    }
+                    FileOutputStream f = new FileOutputStream(sav);
+                    byte[] buf = Long.toString(seed).getBytes();
+                    f.write(buf);
+                    f.close();
+                }
+                case LOAD: {
+                    File sav = new File("saving.txt");
+                    if (!sav.exists()) {
+                        throw new FileNotFoundException();
+                    }
+                    FileInputStream f = new FileInputStream(sav);
+                    seed = 0;
+                    int len = (int) sav.length();
+                    for (int i = 0; i < len; i++) {
+                        seed *= 10;
+                        seed += ((char) (f.read())) - 48;
+                    }
+                }
+            }
+        }
     }
 
     public Inst instExplainer(String input) {
@@ -81,4 +119,5 @@ public class Game {
             return null;
         }
     }
+
 }

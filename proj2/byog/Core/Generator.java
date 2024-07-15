@@ -3,6 +3,7 @@ package byog.Core;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.awt.image.WritableRenderedImage;
 import java.util.Random;
 
 public class Generator {
@@ -99,5 +100,18 @@ public class Generator {
         }
         connectBlocksRecursive(world, i + 1, j);
         connectBlocksRecursive(world, i, j + 1);
+    }
+
+    public void buildWall(TETile[][] world) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (world[i][j] == Tileset.NOTHING) {
+                    Position p = new Position(i, j);
+                    if (p.isAround(world, Tileset.FLOOR, p)) {
+                        world[i][j] = Tileset.WALL;
+                    }
+                }
+            }
+        }
     }
 }

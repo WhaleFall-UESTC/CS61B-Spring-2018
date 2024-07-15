@@ -105,4 +105,36 @@ public class Position {
         int dy = y - p.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
+
+    public boolean isAround(TETile[][] world, TETile t, Position p) {
+        int[] variety = new int[]{-1, 0, 1};
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                Position pos = new Position(p.x + variety[i], p.y + variety[j]);
+                if (pos.isPositionT(world, t) == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isInArrange(Arrange a) {
+        return a.isPointIn(this);
+    }
+
+    public int isPositionT(TETile[][] world, TETile t) {
+        try {
+            if (world[x][y] == t) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return -1;
+        }
+    }
 }

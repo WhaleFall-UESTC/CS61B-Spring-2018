@@ -1,12 +1,16 @@
 package byog.Core;
 
+import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
+import byog.TileEngine.Tileset;
 
 /** This is the main entry point for the program. This class simply parses
  *  the command line inputs, and lets the byog.Core.Game class take over
  *  in either keyboard or input string mode.
  */
 public class Main {
+    private static final int WIDTH = 80;
+    private static final int HEIGHT = 30;
     public static void main(String[] args) {
         if (args.length > 1) {
             System.out.println("Can only have one argument - the input string");
@@ -15,9 +19,13 @@ public class Main {
             Game game = new Game();
             TETile[][] worldState = game.playWithInputString(args[0]);
             System.out.println(TETile.toString(worldState));
+            game.ter.renderFrame(worldState);
+
         } else {
             Game game = new Game();
             game.playWithKeyboard();
         }
+
+
     }
 }

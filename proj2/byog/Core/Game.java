@@ -2,6 +2,8 @@ package byog.Core;
 
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
+import byog.TileEngine.Tileset;
+import byog.lab5.HexWorld;
 
 public class Game {
     TERenderer ter = new TERenderer();
@@ -31,8 +33,52 @@ public class Game {
         // TODO: Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
+        Inst inst = instExplainer(input);
 
-        TETile[][] finalWorldFrame = null;
+        TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
+        Generator gen = new Generator(WIDTH, HEIGHT, inst.seed);
+        ter.initialize(WIDTH, HEIGHT);
+
+        gen.fillNothing(finalWorldFrame);
+        gen.allocateBlocks();
+        gen.setBuildingForBlocks(finalWorldFrame);
+        gen.connectBuildingsInBlocks(finalWorldFrame);
+
         return finalWorldFrame;
+    }
+
+    private class Inst{
+        private long seed;
+        private int op;
+
+        public static final int QUIT = 1;
+        public static final int LOAD = 2;
+
+        public Inst(long seed, int op) {
+            this.seed = seed;
+            this.op = op;
+        }
+
+
+    }
+
+    public Inst instExplainer(String input) {
+        input = input.toLowerCase();
+        if (input.charAt(0) == 'n') {
+            int operator = 0;
+            if (input.endsWith(":q")) {
+                operator = Inst.QUIT;
+            }
+
+            int i;
+            for (i = 1; Character.isDigit(input.charAt(i)); i++);
+            long num = Long.parseLong(input.substring(1, i));
+            return new Inst(num, operator);
+        }
+        else if (input.contains("l")) {
+            return new Inst(0, Inst.LOAD);
+        } else {
+            return null;
+        }
     }
 }

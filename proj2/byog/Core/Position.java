@@ -27,14 +27,16 @@ public class Position {
 
     private class Link {
         public Stack<Position> path;
+        private Arrange bound;
 
         private static final int UP = 0;
         private static final int DOWN = 1;
         private static final int LEFT = 2;
         private static final int RIGHT = 3;
 
-        public Link() {
+        public Link(Arrange a) {
             path = new Stack<>();
+            bound = a;
         }
 
         public void Linkto(Position dest, Random random) {
@@ -53,25 +55,81 @@ public class Position {
                 int dx = px - x;
                 int distance = random.nextInt(Math.abs(dx)) + 1;
                 px = (dx > 0) ? (px - distance) : (px + distance);
-                if (px <= 0) {
-                    px = 1;
+                if (px <= bound.left()) {
+                    px = bound.left() + 1;
                 }
-                if (px >= Game.WIDTH - 1) {
-                    px = Game.WIDTH - 2;
+                if (px >= bound.right() - 1) {
+                    px = bound.right() - 2;
                 }
             } else {
                 int dy = py - y;
                 int distance = random.nextInt(Math.abs(dy)) + 1;
                 py = (dy > 0) ? (py - distance) : (py + distance);
+                if (py <= bound.bottom()) {
+                    py = bound.bottom() + 1;
+                }
+                if (py >= bound.top() - 1) {
+                    py = bound.top() - 2;
+                }
             }
 
             Position newDest = new Position(px, py);
             Linkto(newDest, random);
         }
+
+        public void LinkToByStep(Position dest, Random random) {
+            path.push(dest);
+            int px = dest.x;
+            int py = dest.y;
+            if (px == x && py == y) {
+                return;
+            }
+            Position nextDest;
+            do {
+                nextDest = nextPos(px, py, random);
+            } while (nextDest.equals(path.peek()));
+            LinkToByStep(nextDest, random);
+        }
+
+        private Position nextPos(int px, int py, Random random) {
+            int flag = random.nextInt(3);
+            switch (flag) {
+                case 0: {
+                    if (px > x) {
+                        px -= 1;
+                        if (px <= bound.left()) {
+                            px = bound.left();
+                        }
+                    } else if (px < x) {
+                        px += 1;
+                        if (px >= bound.right() - 1) {
+                            px = bound.right() - 1;
+                        }
+                    }
+                    break;
+                }
+                case 1: {
+                    py -= 1;
+                    if (py <= bound.bottom()) {
+                        py = bound.bottom();
+                    }
+                    break;
+                }
+                default: {
+                    py += 1;
+                    if (py >= bound.top() - 1) {
+                        py = bound.top() - 1;
+                    }
+                    break;
+                }
+            }
+
+            return new Position(px, py);
+        }
     }
 
-    public void drawPathTo(TETile[][]world, Position dest, Random random) {
-        Link linker = new Link();
+    public void drawPathTo(TETile[][]world, Position dest, Arrange bound, Random random) {
+        Link linker = new Link(bound);
         linker.Linkto(dest, random);
         while (true) {
             Position p1 = linker.path.pop();
@@ -98,6 +156,18 @@ public class Position {
                 world[i][p1.y] = t;
             }
         }
+    }
+
+    public Stack<Position> getPathByStepTo(Position dest, Arrange bound, Random random) {
+        Link linker = new Link(bound);
+        linker.LinkToByStep(dest, random);
+        return linker.path;
+    }
+
+    public Stack<Position> getPathTo(Position dest, Arrange bound, Random random) {
+        Link linker = new Link(bound);
+        linker.Linkto(dest, random);
+        return linker.path;
     }
 
     public double distanceTo(Position p) {

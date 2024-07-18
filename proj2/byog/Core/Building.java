@@ -19,11 +19,10 @@ public class Building {
         this.block = new Block(arrange);
     }
 
-    public void generate(TETile[][] world, Random random) {
+    public void generate(Random random) {
         Position startPoint = randomStart(random);
         RandomArrangeFromPoint(startPoint, random);
         selectJoints(random);
-        drawInWorld(world);
     }
 
     protected Position randomStart(Random random) {
@@ -67,10 +66,10 @@ public class Building {
         arrange.fillWith(world, Tileset.FLOOR);
     }
 
-    public void connectTo(TETile[][] world, Building other, Random random) {
+    public void connectTo(TETile[][] world, Building other, Arrange bound, Random random) {
         Position start = choiceAJoint(random);
         Position dest = other.choiceAJoint(random);
-        start.drawPathTo(world, dest, random);
+        start.drawPathTo(world, dest, bound, random);
     }
 
     protected Position choiceAJoint(Random random) {

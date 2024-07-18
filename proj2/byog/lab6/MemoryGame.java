@@ -10,6 +10,7 @@ public class MemoryGame {
     private int width;
     private int height;
     private int round;
+    private static int seed;
     private Random rand;
     private boolean gameOver;
     private boolean playerTurn;
@@ -24,7 +25,7 @@ public class MemoryGame {
             return;
         }
 
-        int seed = Integer.parseInt(args[0]);
+        seed = Integer.parseInt(args[0]);
         MemoryGame game = new MemoryGame(40, 40);
         game.startGame();
     }
@@ -44,11 +45,16 @@ public class MemoryGame {
         StdDraw.enableDoubleBuffering();
 
         //TODO: Initialize random number generator
+        rand = new Random(seed);
     }
 
     public String generateRandomString(int n) {
         //TODO: Generate random string of letters of length n
-        return null;
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            res.append(CHARACTERS[rand.nextInt(26)]);
+        }
+        return res.toString();
     }
 
     public void drawFrame(String s) {

@@ -44,7 +44,17 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      *  or null if this map contains no mapping for the key.
      */
     private V getHelper(K key, Node p) {
-        throw new UnsupportedOperationException();
+        if (p == null) {
+            return null;
+        }
+        int res = key.compareTo(p.key);
+        if (res > 0) {
+            return getHelper(key, p.right);
+        } else if (res < 0) {
+            return getHelper(key, p.left);
+        } else {
+            return p.value;
+        }
     }
 
     /** Returns the value to which the specified key is mapped, or null if this
@@ -52,14 +62,14 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        return getHelper(key, root);
     }
 
     /** Returns a BSTMap rooted in p with (KEY, VALUE) added as a key-value mapping.
       * Or if p is null, it returns a one node BSTMap containing (KEY, VALUE).
      */
     private Node putHelper(K key, V value, Node p) {
-        throw new UnsupportedOperationException();
+        
     }
 
     /** Inserts the key KEY

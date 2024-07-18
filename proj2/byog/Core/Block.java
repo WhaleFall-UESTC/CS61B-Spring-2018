@@ -30,9 +30,9 @@ public class Block {
         arrange.fillWith(world, t);
     }
 
-    public void GenerateBuilding(TETile[][] world, Random random) {
+    public void GenerateBuilding(Random random) {
         building = new Building(this);
-        building.generate(world, random);
+        building.generate(random);
     }
 
     public int left() {
@@ -46,7 +46,25 @@ public class Block {
     }
     public int top() { return arrange.top(); }
 
-    public void connectToBlock(TETile[][] world, Block other, Random random) {
-        building.connectTo(world, other.building, random);
+    public int connectToBlock(TETile[][] world, Block other, Arrange bound, Random random) {
+        if (other.building != null && this.building != null) {
+            building.connectTo(world, other.building, bound, random);
+            return 0;
+        }
+        return -1;
+    }
+
+    public boolean hasBuilding() {
+        return building != null;
+    }
+
+    public void destoryBuilding() {
+        building = null;
+    }
+
+    public void drawBuilding(TETile[][] world) {
+        if (building != null) {
+            building.drawInWorld(world);
+        }
     }
 }

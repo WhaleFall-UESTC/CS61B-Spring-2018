@@ -69,7 +69,26 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
       * Or if p is null, it returns a one node BSTMap containing (KEY, VALUE).
      */
     private Node putHelper(K key, V value, Node p) {
-        
+        int res = key.compareTo(p.key);
+        if (res == 0) {
+            return null;
+        } else if (res > 0) {
+            if (p.right == null) {
+                Node rightChild = new Node(key, value);
+                p.right = rightChild;
+                return rightChild;
+            } else {
+                return putHelper(key, value, p.right);
+            }
+        } else {
+            if (p.left == null) {
+                Node leftChild = new Node(key, value);
+                p.left = leftChild;
+                return leftChild;
+            } else {
+                return putHelper(key, value, p.left);
+            }
+        }
     }
 
     /** Inserts the key KEY
@@ -77,13 +96,21 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (size == 0) {
+            root = new Node(key, value);
+            size++;
+        } else {
+            Node res = putHelper(key, value, root);
+            if (res != null) {
+                size++;
+            }
+        }
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////

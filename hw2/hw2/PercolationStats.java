@@ -53,7 +53,7 @@ public class PercolationStats {
     private static void main(String[] args) {
         PercolationFactory pf = new PercolationFactory();
         PercolationStats ps = new PercolationStats(150, 999, pf);
-        System.out.println("The range is [" +
-                ps.confidenceLow() + ", " + ps.confidenceHigh() + "]");
+        System.out.println("The range is [" + ps.confidenceLow()
+                + ", " + ps.confidenceHigh() + "]");
     }
 }

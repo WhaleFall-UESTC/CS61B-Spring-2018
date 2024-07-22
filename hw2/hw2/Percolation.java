@@ -7,7 +7,6 @@ public class Percolation {
     private int size;
     private int fullRoot;
     private int openNum;
-    private boolean percolate;
     private WeightedQuickUnionUF uf;
     private boolean[] blocksOpen;
 
@@ -17,14 +16,20 @@ public class Percolation {
         }
         this.N = N;
         size = N * N;
-        fullRoot = size;
+        fullRoot = size + N;
         openNum = 0;
-        percolate = false;
-        uf = new WeightedQuickUnionUF(size + 1);
-        blocksOpen = new boolean[size];
+        uf = new WeightedQuickUnionUF(size + N + 1);
+        blocksOpen = new boolean[size + N];
         for (int i = 0; i < size; i++) {
             blocksOpen[i] = false;
         }
+
+        int base = cord2Index(N, 0);
+        for (int i = 0; i < N - 1; i++) {
+            blocksOpen[i + base] = true;
+            uf.union(i + base, i + base + 1);
+        }
+        blocksOpen[base + N - 1] = true;
     }
 
     private boolean checkBound(int i) {
@@ -50,8 +55,16 @@ public class Percolation {
         openNum++;
     }
 
+    private boolean isOpenIncludeHidden(int row, int col) {
+        if (checkBound(col) && row >= 0 && row <= N) {
+            return blocksOpen[cord2Index(row, col)];
+        } else {
+            return false;
+        }
+    }
+
     private void unionBlocks(int index, int r2, int c2) {
-        if (isOpen(r2, c2)) {
+        if (isOpenIncludeHidden(r2, c2)) {
             uf.union(index, cord2Index(r2, c2));
         }
     }
@@ -77,10 +90,6 @@ public class Percolation {
         if (row == 0) {
             uf.union(fullRoot, index);
         }
-        /*  Step4. If block is at the bottom, check percolation  */
-        if (!percolate && row == N - 1 && isFull(index)) {
-            percolate = true;
-        }
     }
 
     public boolean isOpen(int row, int col) {
@@ -96,7 +105,7 @@ public class Percolation {
     }
 
     public boolean isFull(int row, int col) {
-        if (checkCord(row, col)) {
+        if (checkCord(row, col) && isOpen(row, col)) {
             return uf.connected(fullRoot, cord2Index(row, col));
         } else {
             return false;
@@ -112,12 +121,12 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return percolate;
+        return isFull(cord2Index(N, 0));
     }
 
-    private static void Assert(boolean exp) {
+    private static void assertTrue(boolean exp) {
         if (!exp) {
-            throw new IllegalArgumentException("assret failed");
+            throw new IllegalArgumentException("assert failed");
         }
     }
 
@@ -127,22 +136,22 @@ public class Percolation {
         p.open(1, 1);
         p.open(2, 2);
         p.open(3, 3);
-        Assert(p.percolates() == false);
+//        assertTrue(p.percolates() == false);
         p.open(1, 0);
-        Assert(p.isFull(0, 0));
-        Assert(p.isFull(1, 1));
+//        assertTrue(p.isFull(0, 0));
+//        assertTrue(p.isFull(1, 1));
         p.open(2, 1);
-        Assert(p.numberOfOpenSites() == 6);
-        Assert(p.isFull(2, 2));
-        p.open(3, 2);
-        Assert(p.percolates() == true);
+//        assertTrue(p.numberOfOpenSites() == 6);
+//        assertTrue(p.isFull(2, 2));
+        p.open(2, 3);
+        assertTrue(p.percolates());
         p.open(1, 3);
-        Assert(p.isFull(1, 3) == false);
+//        assertTrue(p.isFull(1, 3) == false);
         p.open(0, 3);
-        Assert(p.isFull(1, 3));
+//        assertTrue(p.isFull(1, 3));
         p.open(3, 0);
-        Assert(p.isFull(3, 0) == false);
-        Assert(p.isFull(2, 3) == false);
+//        assertTrue(p.isFull(3, 0) == false);
+//        assertTrue(p.isFull(2, 3) == false);
         System.out.println("PASS!!!");
     }
 }

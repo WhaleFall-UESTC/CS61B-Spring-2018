@@ -23,7 +23,7 @@ public class PercolationStats {
         StdRandom.setSeed(System.currentTimeMillis());
         Percolation p = pf.make(N);
 
-        while(!p.percolates()) {
+        while (!p.percolates()) {
             int row = StdRandom.uniform(N);
             int col = StdRandom.uniform(N);
             p.open(row, col);
@@ -50,9 +50,10 @@ public class PercolationStats {
         return mean() + 1.96 * stddev() / Math.sqrt(T);
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         PercolationFactory pf = new PercolationFactory();
         PercolationStats ps = new PercolationStats(150, 999, pf);
-        System.out.println("The range is [" + ps.confidenceLow() + ", " + ps.confidenceHigh() + "]");
+        System.out.println("The range is [" +
+                ps.confidenceLow() + ", " + ps.confidenceHigh() + "]");
     }
 }

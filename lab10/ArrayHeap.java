@@ -131,7 +131,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (inBounds(left)) {
             int right = rightIndex(index);
             int minChild = min(left, right);
-            if (min(minChild, index) == minChild && inBounds(minChild)) {
+            if (min(minChild, index) == minChild) {
                 swap(minChild, index);
                 sink(minChild);
             }
@@ -179,10 +179,12 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         T res = contents[1].myItem;
         swap(1, size);
         size--;     // Avoid affecting inBounds()
-        sink(1);
         contents[size + 1] = null;
-        if (size > 0 && size <= (contents.length - 1) / 4 && contents.length > 16) {
-            resize(contents.length / 2);
+        if (size != 0) {
+            sink(1);
+            if (size <= (contents.length - 1) / 4 && contents.length > 16) {
+                resize(contents.length / 2);
+            }
         }
         return res;
     }
@@ -448,7 +450,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
 
         int i = 0;
         String[] expected = {"a", "b", "c", "c", "d", "d", "e", "g", "h", "i"};
-        while (pq.size() > 1) {
+        while (pq.size() > 0) {
             assertEquals(expected[i], pq.removeMin());
             i += 1;
         }

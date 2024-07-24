@@ -7,6 +7,7 @@ public class Percolation {
     private int size;
     private int fullRoot;
     private int openNum;
+    private boolean percolate;
     private WeightedQuickUnionUF uf;
     private boolean[] blocksOpen;
 
@@ -18,6 +19,7 @@ public class Percolation {
         size = N * N;
         fullRoot = size + N;
         openNum = 0;
+        percolate = false;
         uf = new WeightedQuickUnionUF(size + N + 1);
         blocksOpen = new boolean[size + N];
         for (int i = 0; i < size; i++) {

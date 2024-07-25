@@ -1,7 +1,6 @@
 package hw4.puzzle;
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.MinPQ;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 

@@ -85,8 +85,9 @@ public class MergeSort {
             }
             len = len / 2 + len % 2;
         }
-        assert subQueues.size() == 1;
-        items = subQueues.dequeue();
+        if (len == 1) {
+            items = subQueues.dequeue();
+        }
         return items;
     }
 

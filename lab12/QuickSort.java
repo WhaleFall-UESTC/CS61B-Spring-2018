@@ -1,4 +1,7 @@
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Queue;
+
+import java.util.Random;
 
 public class QuickSort {
     /**
@@ -48,12 +51,82 @@ public class QuickSort {
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
         // Your code here!
+        for (Item item : unsorted) {
+            int cmp = item.compareTo(pivot);
+            if (cmp > 0) {
+                greater.enqueue(item);
+            } else if (cmp < 0) {
+                less.enqueue(item);
+            } else {
+                equal.enqueue(item);
+            }
+        }
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
         // Your code here!
+        if (items.size() > 1) {
+            Item pivot = getRandomItem(items);
+            Queue<Item> less = new Queue<>();
+            Queue<Item> equal = new Queue<>();
+            Queue<Item> greater = new Queue<>();
+            partition(items, pivot, less, equal, greater);
+            Queue<Item> lessEqual = catenate(quickSort(less), equal);
+            items = catenate(lessEqual, quickSort(greater));
+        }
         return items;
+    }
+
+    public static void main(String[] args) {
+        Queue<String> qs = new Queue<>();
+        MinPQ<String> ans1 = new MinPQ<>();
+        qs.enqueue("Wonderful");
+        qs.enqueue("Everyday");
+        qs.enqueue("Never");
+        qs.enqueue("Knows");
+        qs.enqueue("Best");
+        qs.enqueue("Yuki");
+        qs.enqueue("Jabberwocky");
+        ans1.insert("Wonderful");
+        ans1.insert("Everyday");
+        ans1.insert("Never");
+        ans1.insert("Knows");
+        ans1.insert("Best");
+        ans1.insert("Yuki");
+        ans1.insert("Jabberwocky");
+        Queue<String> res1 = quickSort(qs);
+        boolean pass = true;
+        for (String res : res1) {
+            System.out.println("res: " + res + "\tans: " + ans1.min());
+            if (!res.equals(ans1.delMin())) {
+                pass = false;
+                break;
+            }
+        }
+        System.out.println(pass ? "PASS!!!" : "Failed");
+        System.out.println();
+
+
+        Queue<Integer> qi = new Queue<>();
+        MinPQ<Integer> ans2 = new MinPQ<>();
+        Random rand = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 1000; i++) {
+            int num = rand.nextInt(999999);
+            qi.enqueue(num);
+            ans2.insert(num);
+        }
+        qi = quickSort(qi);
+        pass = true;
+        for (int res : qi) {
+//            System.out.println("res: " + res + "\tans: " + ans2.min());
+            if (res != ans2.delMin()) {
+                pass = false;
+                System.out.println("res: " + res + "\tans: " + ans2.min());
+                break;
+            }
+        }
+        System.out.println(pass ? "PASS!!!" : "Failed");
     }
 }

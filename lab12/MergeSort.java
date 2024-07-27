@@ -1,4 +1,6 @@
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Queue;
+import java.util.Random;
 
 public class MergeSort {
     /**
@@ -35,7 +37,13 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Queue<Item>>
             makeSingleItemQueues(Queue<Item> items) {
         // Your code here!
-        return null;
+        Queue<Queue<Item>> ret = new Queue<>();
+        for (Item item : items) {
+            Queue<Item> subQueue = new Queue<>();
+            subQueue.enqueue(item);
+            ret.enqueue(subQueue);
+        }
+        return ret;
     }
 
     /**
@@ -54,13 +62,85 @@ public class MergeSort {
     private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
             Queue<Item> q1, Queue<Item> q2) {
         // Your code here!
-        return null;
+        Queue<Item> ret = new Queue<>();
+        int turns = q1.size() + q2.size();
+        while (turns-- != 0) {
+            ret.enqueue(getMin(q1, q2));
+        }
+        return ret;
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> mergeSort(
             Queue<Item> items) {
         // Your code here!
+        Queue<Queue<Item>> subQueues = makeSingleItemQueues(items);
+        int len = subQueues.size();
+        while (len > 1) {
+            int turns = len / 2;
+            for (int i = 0; i < turns; i++) {
+                Queue<Item> q1 = subQueues.dequeue();
+                Queue<Item> q2 = subQueues.dequeue();
+                subQueues.enqueue(mergeSortedQueues(q1, q2));
+            }
+            len = len / 2 + len % 2;
+        }
+        assert subQueues.size() == 1;
+        items = subQueues.dequeue();
         return items;
+    }
+
+
+     public static void main(String[] args) {
+        Queue<String> qs = new Queue<>();
+        MinPQ<String> ans1 = new MinPQ<>();
+        qs.enqueue("Summer");
+        qs.enqueue("Pockets");
+        qs.enqueue("Daokémong");
+        qs.enqueue("Ping-pong");
+        qs.enqueue("Umi");
+        qs.enqueue("Sea, You Next");
+        qs.enqueue("Butterfly");
+        qs.enqueue("Inari");
+        ans1.insert("Summer");
+        ans1.insert("Pockets");
+        ans1.insert("Daokémong");
+        ans1.insert("Ping-pong");
+        ans1.insert("Umi");
+        ans1.insert("Sea, You Next");
+        ans1.insert("Butterfly");
+        ans1.insert("Inari");
+        Queue<String> res1 = mergeSort(qs);
+        boolean pass = true;
+        for (String res : res1) {
+            System.out.println("res: " + res + "\tans: " + ans1.min());
+            if (!res.equals(ans1.delMin())) {
+                pass = false;
+                break;
+            }
+        }
+        System.out.println(pass ? "PASS!!!" : "Failed");
+        System.out.println();
+
+
+        Queue<Integer> qi = new Queue<>();
+        MinPQ<Integer> ans2 = new MinPQ<>();
+        Random rand = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 1000; i++) {
+            int num = rand.nextInt(999999);
+            qi.enqueue(num);
+            ans2.insert(num);
+        }
+        qi = mergeSort(qi);
+        pass = true;
+        for (int res : qi) {
+//            System.out.println("res: " + res + "\tans: " + ans2.min());
+            if (res != ans2.delMin()) {
+                pass = false;
+                System.out.println("res: " + res + "\tans: " + ans2.min());
+                break;
+            }
+        }
+        System.out.println(pass ? "PASS!!!" : "Failed");
     }
 }
